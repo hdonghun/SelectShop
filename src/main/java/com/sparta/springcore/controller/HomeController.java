@@ -1,7 +1,6 @@
 package com.sparta.springcore.controller;
 
 
-
 import com.sparta.springcore.security.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
