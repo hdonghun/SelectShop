@@ -1,10 +1,11 @@
 package com.sparta.springcore.service;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springcore.dto.KakaoUserInfoDto;
-import com.sparta.springcore.model.User;
+import com.sparta.springcore.model.Users;
 import com.sparta.springcore.model.UserRoleEnum;
 import com.sparta.springcore.repository.UserRepository;
 import com.sparta.springcore.security.UserDetailsImpl;
@@ -44,16 +45,12 @@ public class KakaoUserService {
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
 // 3. "카카오 사용자 정보"로 필요시 회원가입
-        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
+        Users kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
 // 4. 강제 로그인 처리
         forceLogin(kakaoUser);
     }
 
-
-
-
-    // 1.
     private String getAccessToken(String code) throws JsonProcessingException {
 // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -84,8 +81,6 @@ public class KakaoUserService {
         return jsonNode.get("access_token").asText();
     }
 
-
-    // 2.
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
 // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -114,13 +109,10 @@ public class KakaoUserService {
         return new KakaoUserInfoDto(id, nickname, email);
     }
 
-
-
-    // 3. "카카오 사용자 정보"로 필요시 회원가입
-    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+    private Users registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
 // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
-        User kakaoUser = userRepository.findByKakaoId(kakaoId)
+        Users kakaoUser = userRepository.findByKakaoId(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
 // 회원가입
@@ -136,15 +128,13 @@ public class KakaoUserService {
 // role: 일반 사용자
             UserRoleEnum role = UserRoleEnum.USER;
 
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new Users(nickname, encodedPassword, email, role, kakaoId);
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
     }
 
-
-    // 4. 강제로그인처리 forceLogin
-    private void forceLogin(User kakaoUser) {
+    private void forceLogin(Users kakaoUser) {
         UserDetails userDetails = new UserDetailsImpl(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

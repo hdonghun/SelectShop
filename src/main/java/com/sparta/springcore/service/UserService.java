@@ -1,6 +1,7 @@
 package com.sparta.springcore.service;
+
 import com.sparta.springcore.dto.SignupRequestDto;
-import com.sparta.springcore.model.User;
+import com.sparta.springcore.model.Users;
 import com.sparta.springcore.model.UserRoleEnum;
 import com.sparta.springcore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(SignupRequestDto requestDto) {
+    public Users registerUser(SignupRequestDto requestDto) {
 // 회원 ID 중복 확인
         String username = requestDto.getUsername();
-        Optional<User> found = userRepository.findByUsername(username);
+        Optional<Users> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
         }
@@ -42,7 +43,8 @@ public class UserService {
             role = UserRoleEnum.ADMIN;
         }
 
-        User user = new User(username, password, email, role);
+        Users user = new Users(username, password, email, role);
         userRepository.save(user);
+        return user;
     }
 }
