@@ -1,24 +1,26 @@
 package com.sparta.springcore.security;
 
-
-import com.sparta.springcore.model.User;
-import com.sparta.springcore.model.UserRoleEnum;
+import com.sparta.springcore.model.Users;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
+
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final Users user;
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(Users user) {
         this.user = user;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
@@ -52,15 +54,10 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum userRole = user.getRole();
-        String authority = userRole.getAuthority();
-
-        SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleAuthority);
-
-        return authorities;
+        return Collections.emptyList();
     }
 }

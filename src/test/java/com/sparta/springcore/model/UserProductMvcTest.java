@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springcore.controller.ProductController;
 import com.sparta.springcore.controller.UserController;
 import com.sparta.springcore.dto.ProductRequestDto;
-import com.sparta.springcore.model.User;
-import com.sparta.springcore.model.UserRoleEnum;
 import com.sparta.springcore.mvc.MockSpringSecurityFilter;
 import com.sparta.springcore.security.UserDetailsImpl;
 import com.sparta.springcore.security.WebSecurityConfig;
@@ -81,7 +79,7 @@ class UserProductMvcTest {
         String email = "hope@sparta.com";
         
         UserRoleEnum role = UserRoleEnum.USER;
-        User testUser = new User(username, password, email, role);
+        Users testUser = new Users(username, password, email, role);
         UserDetailsImpl testUserDetails = new UserDetailsImpl(testUser);
         mockPrincipal = new UsernamePasswordAuthenticationToken(testUserDetails, "", testUserDetails.getAuthorities());
     }
